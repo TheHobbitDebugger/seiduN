@@ -13,12 +13,17 @@ enum PrivateImageStoreError: LocalizedError {
     /// A file in the private image directory did not use the expected UUID file name.
     case invalidFileName
 
+    /// Downloaded bytes were not a readable image.
+    case invalidImageData
+
     var errorDescription: String? {
         switch self {
         case .jpegEncodingFailed:
             return "The captured image could not be saved as JPEG data."
         case .invalidFileName:
             return "The saved image file name is not valid."
+        case .invalidImageData:
+            return "The downloaded image data is not valid."
         }
     }
 }
@@ -61,6 +66,33 @@ final class PrivateImageStore: ObservableObject {
             throw PrivateImageStoreError.jpegEncodingFailed
         }
 
+        try saveImageData(jpegData)
+    }
+
+    /// Saves downloaded image bytes into the same app-private gallery.
+    ///
+    /// The backend is plaintext in this milestone, but downloaded images still do
+    /// not go to Photos. They are written only through this sandboxed store.
+    func saveDownloadedImageData(_ data: Data) throws {
+        guard UIImage(data: data) != nil else {
+            throw PrivateImageStoreError.invalidImageData
+        }
+
+        try saveImageData(data)
+    }
+
+    /// Reads a private image file so it can be uploaded to the backend.
+    ///
+    /// The upload pipeline reads from the app sandbox and never from the Photos gallery.
+    func imageData(for image: PrivateImage) throws -> Data {
+        try Data(contentsOf: image.fileURL)
+    }
+
+    /// Writes image bytes to the app-private Documents directory.
+    ///
+    /// This is the only write path for saved images, whether they came from the
+    /// camera or from the plaintext download API.
+    private func saveImageData(_ data: Data) throws {
         /// A UUID file name avoids leaking user-provided names or camera metadata in the path.
         let imageID = UUID()
         let fileURL = storageDirectoryURL()
@@ -69,7 +101,7 @@ final class PrivateImageStore: ObservableObject {
 
         /// `.atomic` writes to a temporary file first, then moves it into place.
         /// `.completeFileProtection` asks iOS to keep the file protected while locked.
-        try jpegData.write(to: fileURL, options: [.atomic, .completeFileProtection])
+        try data.write(to: fileURL, options: [.atomic, .completeFileProtection])
 
         /// Excluding private captures from device backups reduces accidental spread
         /// beyond this device. We can revisit this when encrypted backup exists.

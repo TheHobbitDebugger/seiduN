@@ -1,0 +1,14 @@
+# Local backend metadata created by the development server.
+server/data/
+
+# Raw object bytes written by the self-owned object storage service.
+server/storage/objects/
+
+# Temporary runtime data created by backend smoke tests.
+server/.runtime/
+
+# Xcode's generated project can be recreated from ios/PrivateImageVault/project.yml.
+ios/PrivateImageVault/*.xcodeproj/
+
+# macOS Finder metadata.
+.DS_Store

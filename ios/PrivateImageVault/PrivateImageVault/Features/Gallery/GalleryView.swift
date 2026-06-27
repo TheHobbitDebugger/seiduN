@@ -15,6 +15,9 @@ struct GalleryView: View {
     /// Holds a user-visible error message when capture or storage fails.
     @State private var errorMessage: String?
 
+    /// The selected local image that should be sent through the plaintext API.
+    @State private var imageToSend: PrivateImage?
+
     /// Adaptive columns keep the gallery usable across iPhone sizes.
     private let columns = [
         GridItem(.adaptive(minimum: 120), spacing: 12)
@@ -36,6 +39,9 @@ struct GalleryView: View {
                             ForEach(imageStore.images) { image in
                                 PrivateImageTile(
                                     image: image,
+                                    onSend: {
+                                        imageToSend = image
+                                    },
                                     onDelete: {
                                         imageStore.delete(image)
                                     }
@@ -60,6 +66,9 @@ struct GalleryView: View {
                 CameraCaptureView { result in
                     handleCaptureResult(result)
                 }
+            }
+            .sheet(item: $imageToSend) { image in
+                SendImageSheet(image: image)
             }
             .alert("Image Not Saved", isPresented: hasErrorMessage) {
                 Button("OK", role: .cancel) {

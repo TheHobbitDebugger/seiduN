@@ -10,10 +10,13 @@ of the standard iOS Photos gallery.
 - Native iOS app written in Swift and SwiftUI.
 - Camera capture through `UIImagePickerController`.
 - Local image storage in the app's Documents directory.
+- Account registration and login through the local Node.js API.
+- Session token persistence in Keychain.
+- Plaintext upload of app-private images to the Node.js object API.
+- Inbox download that saves received images back into the app-private gallery.
 - No call to `UIImageWriteToSavedPhotosAlbum`.
 - No Photos library permission.
 - No encryption yet.
-- No backend calls yet.
 
 ## Why Documents Storage
 
@@ -43,9 +46,29 @@ open PrivateImageVault.xcodeproj
 If you do not want to use XcodeGen, create a new SwiftUI iOS app in Xcode named
 `PrivateImageVault`, then copy the `PrivateImageVault/` source folder into it.
 
+## Local API
+
+The iOS app points at:
+
+```text
+http://127.0.0.1:3000
+```
+
+That works for the iOS simulator when the Node.js API is running on the same Mac.
+For a physical iPhone, change `APIConfiguration.localDevelopment` to your Mac's
+LAN IP address.
+
+Start the backend from the repository root:
+
+```sh
+cd server
+npm start
+```
+
 ## Next Milestones
 
-1. Add account screens.
-2. Add the Node.js API client.
-3. Upload plaintext images to the self-owned object storage API.
-4. Add libsodium encryption after plaintext delivery is proven.
+1. Generate/open the Xcode project on a Mac.
+2. Test register/login against the local Node.js API.
+3. Capture a private image and send it to another registered user.
+4. Download received images into the private gallery.
+5. Add libsodium encryption after plaintext delivery is proven.

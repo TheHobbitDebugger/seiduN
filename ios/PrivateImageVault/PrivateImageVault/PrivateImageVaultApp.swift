@@ -2,8 +2,8 @@ import SwiftUI
 
 /// The application entry point.
 ///
-/// SwiftUI starts here, creates the root scene, and injects the shared image
-/// store so every screen reads and writes the same private app storage.
+/// SwiftUI starts here, creates the root scene, and injects the shared stores
+/// used by capture, account/session state, and plaintext API calls.
 @main
 struct PrivateImageVaultApp: App {
     /// The image store owns the app-private file directory and publishes saved images.
@@ -11,14 +11,30 @@ struct PrivateImageVaultApp: App {
     /// `@StateObject` keeps one store instance alive for the lifetime of the app UI.
     @StateObject private var imageStore = PrivateImageStore()
 
+    /// API client used by session, send, and inbox flows.
+    @StateObject private var apiClient: APIClient
+
+    /// Session store owns login/register/logout state and Keychain persistence.
+    @StateObject private var sessionStore: SessionStore
+
+    /// Creates shared app services once at launch.
+    @MainActor
+    init() {
+        let apiClient = APIClient(configuration: .localDevelopment)
+
+        _apiClient = StateObject(wrappedValue: apiClient)
+        _sessionStore = StateObject(wrappedValue: SessionStore(apiClient: apiClient))
+    }
+
     var body: some Scene {
         WindowGroup {
-            /// The first screen is the private gallery.
+            /// The root view decides whether to show auth or the logged-in app.
             ///
-            /// The gallery receives `imageStore` through the SwiftUI environment so later
-            /// screens can access it without passing it through every initializer.
-            GalleryView()
+            /// Environment objects keep shared state out of individual view constructors.
+            RootView()
                 .environmentObject(imageStore)
+                .environmentObject(apiClient)
+                .environmentObject(sessionStore)
         }
     }
 }

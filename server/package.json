@@ -1,0 +1,14 @@
+{
+  "name": "private-image-vault-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plaintext MVP API for PrivateImageVault account, session, object storage, and image delivery.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "smoke": "node scripts/smoke-test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

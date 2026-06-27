@@ -38,6 +38,13 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 
+	<!-- Allow the iOS simulator to call the local plaintext development API. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+
 	<!-- A minimal launch screen entry lets iOS show a clean startup screen. -->
 	<key>UILaunchScreen</key>
 	<dict/>

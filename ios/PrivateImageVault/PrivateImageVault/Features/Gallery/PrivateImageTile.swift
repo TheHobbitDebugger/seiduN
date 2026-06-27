@@ -8,6 +8,9 @@ struct PrivateImageTile: View {
     /// The private image represented by this tile.
     let image: PrivateImage
 
+    /// Called when the user chooses to send this private image.
+    let onSend: () -> Void
+
     /// Called when the user chooses to delete the private image file.
     let onDelete: () -> Void
 
@@ -18,15 +21,27 @@ struct PrivateImageTile: View {
                 .aspectRatio(1, contentMode: .fill)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            /// Delete is included early so test images can be removed without touching Photos.
-            Button(role: .destructive) {
-                onDelete()
-            } label: {
-                Image(systemName: "trash")
-                    .font(.system(size: 14, weight: .semibold))
-                    .padding(8)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Circle())
+            /// These controls act only on app-private files.
+            HStack(spacing: 6) {
+                Button {
+                    onSend()
+                } label: {
+                    Image(systemName: "paperplane")
+                        .font(.system(size: 14, weight: .semibold))
+                        .padding(8)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                }
+
+                Button(role: .destructive) {
+                    onDelete()
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 14, weight: .semibold))
+                        .padding(8)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                }
             }
             .buttonStyle(.plain)
             .padding(6)
