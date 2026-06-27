@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The bundle identifier is filled from the Xcode build setting in project.yml. -->
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
+	<!-- The name shown under the app icon on iOS. -->
+	<key>CFBundleDisplayName</key>
+	<string>Private Vault</string>
+
+	<!-- The executable and bundle names are filled by Xcode during the build. -->
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+
+	<!-- Standard bundle metadata required by iOS applications. -->
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+
+	<!-- iOS requires this explanation before the app can open the camera. -->
+	<key>NSCameraUsageDescription</key>
+	<string>Private Vault uses the camera to capture images that stay inside the app.</string>
+
+	<!-- Keep the app's Documents directory out of iTunes/Finder file sharing. -->
+	<key>UIFileSharingEnabled</key>
+	<false/>
+
+	<!-- Keep files from being opened in place by the iOS Files document browser. -->
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+
+	<!-- A minimal launch screen entry lets iOS show a clean startup screen. -->
+	<key>UILaunchScreen</key>
+	<dict/>
+</dict>
+</plist>
